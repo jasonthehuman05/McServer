@@ -68,6 +68,17 @@ namespace McServer.ServerManager
                 serverProcess.EnableRaisingEvents = true;
                 serverProcess.Exited += ServerProcessTerminated;
                 ServerInput = serverProcess.StandardInput;
+
+                serverProcess.OutputDataReceived += NewServerDataReceived;
+            }
+        }
+
+        private void NewServerDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(e.Data))
+            {
+                //A string with content received, send the event
+
             }
         }
 
