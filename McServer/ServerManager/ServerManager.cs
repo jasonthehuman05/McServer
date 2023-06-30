@@ -13,6 +13,8 @@ namespace McServer.ServerManager
         // Minecraft Automatic Data Delivery Initialization Equipment
         public List<string> players { get; set; }
         public event OutputEventHandler OnOutputReceived;
+        public event EventHandler ServerClosed;
+        public event EventHandler ServerOpened;
         private string runCommand = String.Empty;
         private Process serverProcess;
         private bool serverRunning = false;
@@ -22,6 +24,9 @@ namespace McServer.ServerManager
         public ServerManager()
         {
             OnOutputReceived = new OutputEventHandler(OutputReceivedMethod);
+            ServerClosed = new EventHandler(ServerClosedMethod);
+            ServerOpened = new EventHandler(ServerOpenedMethod);
+
             //Get the server path
             string p = Directory.GetCurrentDirectory();
             serverPath = $"{p}/ServerManager";
@@ -35,6 +40,9 @@ namespace McServer.ServerManager
         /// </summary>
         /// <param name="e">Arguments for the event</param>
         private void OutputReceivedMethod(OutputEventArgs e) { }
+
+        private void ServerClosedMethod(object sender, EventArgs e) { }
+        private void ServerOpenedMethod(object sender, EventArgs e) { }
 
         /// <summary>
         /// Loads the file containing the command to start the server
@@ -74,6 +82,7 @@ namespace McServer.ServerManager
             };
             if((serverProcess = Process.Start(startInfo)) != null) //If successfully started process
             {
+                ServerOpened.Invoke(null, null);
                 //Set up events
                 serverProcess.EnableRaisingEvents = true;
                 serverProcess.Exited += ServerProcessTerminated;
@@ -95,7 +104,7 @@ namespace McServer.ServerManager
         private void ServerProcessTerminated(object? sender, EventArgs e)
         {
             //Server Has Closed. Handle it
-            throw new NotImplementedException();
+            ServerClosed.Invoke(null, null);
         }
     }
 }

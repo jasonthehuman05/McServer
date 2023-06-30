@@ -27,6 +27,18 @@ namespace McServer
             InitializeComponent();
             sm = new ServerManager.ServerManager();
             sm.OnOutputReceived += ServerOutput;
+            sm.ServerClosed += ServerClosed;
+            sm.ServerOpened += ServerOpened;
+        }
+
+        private void ServerOpened(object? sender, EventArgs e)
+        {
+            HeaderBar.Fill = Brushes.Green;
+        }
+
+        private void ServerClosed(object? sender, EventArgs e)
+        {
+            HeaderBar.Fill = Brushes.Red;
         }
 
         private void ServerOutput(ServerManager.OutputEventArgs e)

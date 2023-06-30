@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="McServer - Minecraft Automatic Data Delivery Initialization Equipment" Height="470" Width="800" ResizeMode="NoResize" Background="#FFFBC9CB">
     <Grid Margin="0,0,0,0">
-        <Rectangle HorizontalAlignment="Center" Height="54" Stroke="#FFF34A53" VerticalAlignment="Top" Width="800" Fill="#FFF34A53"/>
+        <Rectangle x:Name="HeaderBar" HorizontalAlignment="Center" Height="54" Stroke="#FFF34A53" VerticalAlignment="Top" Width="800" Fill="#FFF34A53"/>
         <Label Content="McServer" HorizontalAlignment="Left" Height="54" VerticalAlignment="Top" Width="250" FontSize="48" Padding="0" Margin="10,-6,0,0"/>
         <TextBox x:Name="ConsoleOutputBox" HorizontalAlignment="Left" Height="330" Margin="10,69,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="490"/>
         <TextBox x:Name="ConsoleInputBox" HorizontalAlignment="Left" Margin="10,404,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="430" Height="20"/>
