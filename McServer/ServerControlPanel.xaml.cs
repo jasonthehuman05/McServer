@@ -20,10 +20,18 @@ namespace McServer
     /// </summary>
     public partial class ServerControlPanel : Window
     {
+        ServerManager.ServerManager sm;
+
         public ServerControlPanel()
         {
             InitializeComponent();
-            
+            sm = new ServerManager.ServerManager();
+            sm.OnOutputReceived += ServerOutput;
+        }
+
+        private void ServerOutput(ServerManager.OutputEventArgs e)
+        {
+            ConsoleOutputBox.Text = ConsoleOutputBox.Text + "\n" + e.output;
         }
 
         public void UpdatePlayerList(string[] players)

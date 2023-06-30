@@ -7,8 +7,6 @@ using System.Threading.Tasks;
 namespace McServer.ServerManager
 {
     public delegate void OutputEventHandler(OutputEventArgs e);
-    
-
     /// <summary>
     /// Event Arguments for any outputs
     /// </summary>

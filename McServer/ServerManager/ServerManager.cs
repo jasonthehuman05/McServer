@@ -10,7 +10,9 @@ namespace McServer.ServerManager
 {
     internal class ServerManager
     {
+        // Minecraft Automatic Data Delivery Initialization Equipment
         public List<string> players { get; set; }
+        public event OutputEventHandler OnOutputReceived;
         private string runCommand = String.Empty;
         private Process serverProcess;
         private bool serverRunning = false;
@@ -19,20 +21,27 @@ namespace McServer.ServerManager
 
         public ServerManager()
         {
-            //Initialize the server manager
-            runCommand = LoadServerRunFile();
-
+            OnOutputReceived = new OutputEventHandler(OutputReceivedMethod);
             //Get the server path
             string p = Directory.GetCurrentDirectory();
             serverPath = $"{p}/ServerManager";
+            
+            //Initialize the server manager
+            runCommand = LoadServerRunFile();
         }
+
+        /// <summary>
+        /// Fires when new output has been created, thus triggering the relevant event
+        /// </summary>
+        /// <param name="e">Arguments for the event</param>
+        private void OutputReceivedMethod(OutputEventArgs e) { }
 
         /// <summary>
         /// Loads the file containing the command to start the server
         /// </summary>
         private string LoadServerRunFile()
         {
-            return File.ReadAllText("runCommand.txt");
+            return File.ReadAllText($"{serverPath}/runCommand.txt");
         }
 
 
@@ -65,6 +74,7 @@ namespace McServer.ServerManager
             };
             if((serverProcess = Process.Start(startInfo)) != null) //If successfully started process
             {
+                //Set up events
                 serverProcess.EnableRaisingEvents = true;
                 serverProcess.Exited += ServerProcessTerminated;
                 ServerInput = serverProcess.StandardInput;
@@ -78,12 +88,13 @@ namespace McServer.ServerManager
             if (!string.IsNullOrEmpty(e.Data))
             {
                 //A string with content received, send the event
-
+                OnOutputReceived.Invoke(new OutputEventArgs(e.Data));
             }
         }
 
         private void ServerProcessTerminated(object? sender, EventArgs e)
         {
+            //Server Has Closed. Handle it
             throw new NotImplementedException();
         }
     }
