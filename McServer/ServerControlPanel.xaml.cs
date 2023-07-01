@@ -29,6 +29,14 @@ namespace McServer
             sm.OnOutputReceived += ServerOutput;
             sm.ServerClosed += ServerClosed;
             sm.ServerOpened += ServerOpened;
+            sm.OnPlayerJoined += PlayerChange;
+            sm.OnPlayerLeft += PlayerChange;
+        }
+
+        private void PlayerChange(ServerManager.OutputEventArgs e)
+        {
+            //Player list has changed
+            UpdatePlayerList(sm.players.ToArray());
         }
 
         private void ServerOpened(object? sender, EventArgs e)
@@ -44,6 +52,7 @@ namespace McServer
             this.Dispatcher.Invoke(() =>
             {
                 HeaderBar.Fill = Brushes.Red;
+                PlayerListBox.Items.Clear();
             });
         }
 
@@ -58,11 +67,15 @@ namespace McServer
 
         public void UpdatePlayerList(string[] players)
         {
-            PlayerListBox.Items.Clear();
-            foreach(string player in players)
+            this.Dispatcher.Invoke(() =>
             {
-                PlayerListBox.Items.Add(players);
-            }
+                Console.WriteLine(players);
+                PlayerListBox.Items.Clear();
+                foreach (string player in players)
+                {
+                    PlayerListBox.Items.Add(players);
+                }
+            });
         }
 
         private void StartServerButton_Click(object sender, RoutedEventArgs e)

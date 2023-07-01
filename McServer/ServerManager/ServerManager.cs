@@ -11,8 +11,10 @@ namespace McServer.ServerManager
     internal class ServerManager
     {
         // Minecraft Automatic Data Delivery Initialization Equipment
-        public List<string> players { get; set; }
+        public List<string> players { get; set; } = new List<string>();
         public event OutputEventHandler OnOutputReceived;
+        public event OutputEventHandler OnPlayerJoined;
+        public event OutputEventHandler OnPlayerLeft;
         public event EventHandler ServerClosed;
         public event EventHandler ServerOpened;
         private string runCommand = String.Empty;
@@ -39,7 +41,7 @@ namespace McServer.ServerManager
         /// Fires when new output has been created, thus triggering the relevant event
         /// </summary>
         /// <param name="e">Arguments for the event</param>
-        private void OutputReceivedMethod(OutputEventArgs e) { }
+        private void OutputReceivedMethod(OutputEventArgs e) { NewOutputProcessing(e.output); }
         /// <summary>
         /// Fires when the server is closed
         /// </summary>
@@ -82,11 +84,62 @@ namespace McServer.ServerManager
             {
                 //server is running. Kill the thing
                 SendCommand("stop"); //Send stop command
-
+                players.Clear();
                 serverRunning = false;
             }
         }
 
+        public void NewOutputProcessing(string output)
+        {
+            Debug.WriteLine(output);
+            //Check to see if the string is a joined the game message
+            if (output.Contains("joined the game"))
+            {
+                //it is a joined the game message. Get the username
+                //remove the end
+                output.Replace(" joined the game", string.Empty);
+                int usernameFirstCharIndex = -1;
+                for (int i = output.Length-1; i > 0; i--)//Go backwards until we find a space. then we have the index of the start of the name!
+                {
+                    if (output[i] == ' ')
+                    {
+                        //found index
+                        usernameFirstCharIndex = i;
+                        break;
+                    }
+                }
+                string username = output.Substring(usernameFirstCharIndex); //extract the username
+                Debug.WriteLine(username);
+                PlayerJoined(username);
+            }
+
+
+            //Check to see if the string is a left the game message
+            if (output.Contains("left the game"))
+            {
+                //it is a left the game message. Get the username
+                //remove the end
+                output.Replace(" left the game", string.Empty);
+                int usernameFirstCharIndex = -1;
+                for (int i = output.Length-1; i > 0; i--)//Go backwards until we find a space. then we have the index of the start of the name!
+                {
+                    if (output[i] == ' ')
+                    {
+                        //found index
+                        usernameFirstCharIndex = i;
+                        break;
+                    }
+                }
+                string username = output.Substring(usernameFirstCharIndex); //extract the username
+                Debug.WriteLine(username);
+                PlayerLeft(username);
+            }
+        }
+
+        /// <summary>
+        /// Send a command to the Minecraft server
+        /// </summary>
+        /// <param name="command">The command to send</param>
         public void SendCommand(string command)
         {
             Debug.WriteLine(command);
@@ -142,6 +195,18 @@ namespace McServer.ServerManager
             //Server Has Closed. Handle it
             serverRunning = false;
             ServerClosed.Invoke(null, null);
+        }
+
+        private void PlayerJoined(string username)
+        {
+            players.Add(username);
+            OnPlayerJoined.Invoke(new OutputEventArgs(username));
+        }
+        
+        private void PlayerLeft(string username)
+        {
+            players.Remove(username);
+            OnPlayerLeft.Invoke(new OutputEventArgs(username));
         }
         #endregion
     }
