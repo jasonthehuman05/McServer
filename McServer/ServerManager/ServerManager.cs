@@ -40,8 +40,17 @@ namespace McServer.ServerManager
         /// </summary>
         /// <param name="e">Arguments for the event</param>
         private void OutputReceivedMethod(OutputEventArgs e) { }
-
+        /// <summary>
+        /// Fires when the server is closed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ServerClosedMethod(object sender, EventArgs e) { }
+        /// <summary>
+        /// Fires when the server is opened
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ServerOpenedMethod(object sender, EventArgs e) { }
 
         /// <summary>
@@ -65,6 +74,15 @@ namespace McServer.ServerManager
             }
         }
 
+        public void StopServer()
+        {
+            if (serverRunning)
+            {
+                //server is running. Kill the thing
+                //Send stop command
+            }
+        }
+
         /// <summary>
         /// Launches the server process
         /// </summary>
@@ -78,7 +96,7 @@ namespace McServer.ServerManager
                 RedirectStandardInput = true,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
-                WorkingDirectory = serverPath
+                WorkingDirectory = serverPath + "/server"
             };
             if((serverProcess = Process.Start(startInfo)) != null) //If successfully started process
             {
@@ -89,9 +107,14 @@ namespace McServer.ServerManager
                 ServerInput = serverProcess.StandardInput;
 
                 serverProcess.OutputDataReceived += NewServerDataReceived;
+                serverProcess.ErrorDataReceived += NewServerDataReceived;
+                serverProcess.BeginOutputReadLine();
+                serverProcess.BeginErrorReadLine();
+                serverRunning = false;
             }
         }
 
+        #region events
         private void NewServerDataReceived(object sender, DataReceivedEventArgs e)
         {
             if (!string.IsNullOrEmpty(e.Data))
@@ -104,7 +127,9 @@ namespace McServer.ServerManager
         private void ServerProcessTerminated(object? sender, EventArgs e)
         {
             //Server Has Closed. Handle it
+            serverRunning = false;
             ServerClosed.Invoke(null, null);
         }
+        #endregion
     }
 }

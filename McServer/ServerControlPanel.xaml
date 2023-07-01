@@ -9,12 +9,12 @@
     <Grid Margin="0,0,0,0">
         <Rectangle x:Name="HeaderBar" HorizontalAlignment="Center" Height="54" Stroke="#FFF34A53" VerticalAlignment="Top" Width="800" Fill="#FFF34A53"/>
         <Label Content="McServer" HorizontalAlignment="Left" Height="54" VerticalAlignment="Top" Width="250" FontSize="48" Padding="0" Margin="10,-6,0,0"/>
-        <TextBox x:Name="ConsoleOutputBox" HorizontalAlignment="Left" Height="330" Margin="10,69,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="490"/>
+        <TextBox x:Name="ConsoleOutputBox" HorizontalAlignment="Left" Height="330" Margin="10,69,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="490"/>
         <TextBox x:Name="ConsoleInputBox" HorizontalAlignment="Left" Margin="10,404,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="430" Height="20"/>
         <Button x:Name="SendCommandButton" Content="Send" HorizontalAlignment="Left" Height="20" Margin="445,404,0,0" VerticalAlignment="Top" Width="55"/>
         <Canvas HorizontalAlignment="Left" Height="355" Margin="505,69,0,0" VerticalAlignment="Top" Width="285" Background="#FFF34A53">
-            <Button x:Name="StartServerButton" Content="Start" Height="50" Width="125" HorizontalAlignment="Left" Canvas.Left="10" Canvas.Top="10" VerticalAlignment="Center"/>
-            <Button x:Name="StopServerButton" Content="Stop" Height="50" Width="125" Canvas.Left="150" Canvas.Top="10" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <Button x:Name="StartServerButton" Content="Start" Height="50" Width="125" HorizontalAlignment="Left" Canvas.Left="10" Canvas.Top="10" VerticalAlignment="Center" Click="StartServerButton_Click"/>
+            <Button x:Name="StopServerButton" Content="Stop" Height="50" Width="125" Canvas.Left="150" Canvas.Top="10" HorizontalAlignment="Left" VerticalAlignment="Center" Click="StopServerButton_Click"/>
             <ListBox x:Name="PlayerListBox" Height="230" Width="225" HorizontalAlignment="Center" Canvas.Top="95" VerticalAlignment="Top" Canvas.Left="30"/>
         </Canvas>
 

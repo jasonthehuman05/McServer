@@ -33,17 +33,27 @@ namespace McServer
 
         private void ServerOpened(object? sender, EventArgs e)
         {
-            HeaderBar.Fill = Brushes.Green;
+            this.Dispatcher.Invoke(() =>
+            {
+                HeaderBar.Fill = Brushes.Green;
+            });
         }
 
         private void ServerClosed(object? sender, EventArgs e)
         {
-            HeaderBar.Fill = Brushes.Red;
+            this.Dispatcher.Invoke(() =>
+            {
+                HeaderBar.Fill = Brushes.Red;
+            });
         }
 
         private void ServerOutput(ServerManager.OutputEventArgs e)
         {
-            ConsoleOutputBox.Text = ConsoleOutputBox.Text + "\n" + e.output;
+            this.Dispatcher.Invoke(() =>
+            {
+                ConsoleOutputBox.Text = ConsoleOutputBox.Text + "\n" + e.output;
+                ConsoleOutputBox.ScrollToEnd();
+            });
         }
 
         public void UpdatePlayerList(string[] players)
@@ -53,6 +63,16 @@ namespace McServer
             {
                 PlayerListBox.Items.Add(players);
             }
+        }
+
+        private void StartServerButton_Click(object sender, RoutedEventArgs e)
+        {
+            sm.StartServer();
+        }
+
+        private void StopServerButton_Click(object sender, RoutedEventArgs e)
+        {
+            sm.StopServer();
         }
     }
 }
