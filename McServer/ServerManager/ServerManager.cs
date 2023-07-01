@@ -61,7 +61,6 @@ namespace McServer.ServerManager
             return File.ReadAllText($"{serverPath}/runCommand.txt");
         }
 
-
         /// <summary>
         /// Start the server. Continue if it is already running
         /// </summary>
@@ -74,13 +73,27 @@ namespace McServer.ServerManager
             }
         }
 
+        /// <summary>
+        /// Stops the server. Nothing happens if the server is not already running.
+        /// </summary>
         public void StopServer()
         {
             if (serverRunning)
             {
                 //server is running. Kill the thing
-                //Send stop command
+                SendCommand("stop"); //Send stop command
+
+                serverRunning = false;
             }
+        }
+
+        public void SendCommand(string command)
+        {
+            Debug.WriteLine(command);
+            Debug.WriteLine(serverRunning);
+            if (!serverRunning) { return; } //Do not continue if the server is not running
+
+            ServerInput.WriteLine(command); //Write line to input stream
         }
 
         /// <summary>
@@ -110,7 +123,7 @@ namespace McServer.ServerManager
                 serverProcess.ErrorDataReceived += NewServerDataReceived;
                 serverProcess.BeginOutputReadLine();
                 serverProcess.BeginErrorReadLine();
-                serverRunning = false;
+                serverRunning = true;
             }
         }
 

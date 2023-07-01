@@ -67,12 +67,18 @@ namespace McServer
 
         private void StartServerButton_Click(object sender, RoutedEventArgs e)
         {
+            ConsoleOutputBox.Text = "";
             sm.StartServer();
         }
 
         private void StopServerButton_Click(object sender, RoutedEventArgs e)
         {
             sm.StopServer();
+        }
+
+        private void SendCommandButton_Click(object sender, RoutedEventArgs e)
+        {
+            sm.SendCommand(ConsoleInputBox.Text);
         }
     }
 }
