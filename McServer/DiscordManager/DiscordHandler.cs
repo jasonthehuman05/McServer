@@ -12,6 +12,7 @@ namespace McServer.DiscordManager
     internal class DiscordHandler
     {
         static DiscordSocketClient client;
+        static CommandHandler ch;
         static string token;
 
         public DiscordHandler()
@@ -39,9 +40,13 @@ namespace McServer.DiscordManager
             client.Dispose();
         }
 
-        private static Task BotReady()
+        private static async Task BotReady()
         {
-            throw new NotImplementedException();
+            //Load Commands
+            ch = new CommandHandler();
+            SlashCommandProperties[] commands = await ch.LoadCommands();
+            await client.CreateGlobalApplicationCommandAsync(commands[0]);
+            await client.CreateGlobalApplicationCommandAsync(commands[1]);
         }
 
         private static Task DiscordLogger(LogMessage arg)
