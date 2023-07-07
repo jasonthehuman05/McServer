@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Diagnostics;
 
 namespace McServer
 {
@@ -69,11 +70,11 @@ namespace McServer
         {
             this.Dispatcher.Invoke(() =>
             {
-                Console.WriteLine(players);
+                Debug.WriteLine($"PLAYERS: {players}");
                 PlayerListBox.Items.Clear();
                 foreach (string player in players)
                 {
-                    PlayerListBox.Items.Add(players);
+                    PlayerListBox.Items.Add(player);
                 }
             });
         }
@@ -92,6 +93,11 @@ namespace McServer
         private void SendCommandButton_Click(object sender, RoutedEventArgs e)
         {
             sm.SendCommand(ConsoleInputBox.Text);
+        }
+
+        private void FormClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            sm.StopServer();
         }
     }
 }

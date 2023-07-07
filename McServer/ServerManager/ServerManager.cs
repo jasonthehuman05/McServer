@@ -12,6 +12,7 @@ namespace McServer.ServerManager
     {
         // Minecraft Automatic Data Delivery Initialization Equipment
         public List<string> players { get; set; } = new List<string>();
+        public int playerCount { get { return players.Count; } }
         public event OutputEventHandler OnOutputReceived;
         public event OutputEventHandler OnPlayerJoined;
         public event OutputEventHandler OnPlayerLeft;
@@ -89,27 +90,29 @@ namespace McServer.ServerManager
             }
         }
 
+        /// <summary>
+        /// Handles any new outputs from the server
+        /// </summary>
+        /// <param name="output">The output from the server to handle</param>
         public void NewOutputProcessing(string output)
         {
-            Debug.WriteLine(output);
             //Check to see if the string is a joined the game message
             if (output.Contains("joined the game"))
             {
                 //it is a joined the game message. Get the username
                 //remove the end
-                output.Replace(" joined the game", string.Empty);
+                output = output.Replace(" joined the game", string.Empty);
                 int usernameFirstCharIndex = -1;
                 for (int i = output.Length-1; i > 0; i--)//Go backwards until we find a space. then we have the index of the start of the name!
                 {
                     if (output[i] == ' ')
                     {
                         //found index
-                        usernameFirstCharIndex = i;
+                        usernameFirstCharIndex = i+1;
                         break;
                     }
                 }
                 string username = output.Substring(usernameFirstCharIndex); //extract the username
-                Debug.WriteLine(username);
                 PlayerJoined(username);
             }
 
@@ -119,19 +122,18 @@ namespace McServer.ServerManager
             {
                 //it is a left the game message. Get the username
                 //remove the end
-                output.Replace(" left the game", string.Empty);
+                output = output.Replace(" left the game", string.Empty);
                 int usernameFirstCharIndex = -1;
                 for (int i = output.Length-1; i > 0; i--)//Go backwards until we find a space. then we have the index of the start of the name!
                 {
                     if (output[i] == ' ')
                     {
                         //found index
-                        usernameFirstCharIndex = i;
+                        usernameFirstCharIndex = i+1;
                         break;
                     }
                 }
                 string username = output.Substring(usernameFirstCharIndex); //extract the username
-                Debug.WriteLine(username);
                 PlayerLeft(username);
             }
         }
