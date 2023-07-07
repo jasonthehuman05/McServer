@@ -14,9 +14,15 @@ namespace McServer.DiscordManager
         static DiscordSocketClient client;
         static CommandHandler ch;
         static string token;
+        static Action startFunction;
+        static Action stopFunction;
 
-        public DiscordHandler()
+        public DiscordHandler(Action _startFunction, Action _stopFunction)
         {
+            //Get start and stop functions
+            startFunction = _startFunction;
+            stopFunction = _stopFunction;
+
             MainAsyncProcess(); //Run the main process that handles running the bot
             token = System.IO.File.ReadAllText("DiscordManager/discord.token"); //Load the discord bot token from the file
         }
@@ -28,7 +34,7 @@ namespace McServer.DiscordManager
             client.Log += DiscordLogger;
             client.Ready += BotReady;
             //Create event to process command
-            client.SlashCommandExecuted += commandHandler.CommandExecuted;
+            client.SlashCommandExecuted += CommandExecuted; ;
 
             //Attempt first log in
             await client.LoginAsync(TokenType.Bot, token);
@@ -38,6 +44,20 @@ namespace McServer.DiscordManager
             await Task.Delay(-1);
             await client.StopAsync();
             client.Dispose();
+        }
+
+        private static Task CommandExecuted(SocketSlashCommand arg)
+        {
+            if(arg.CommandName == "mcstart") //Server start command
+            {
+                startFunction();
+            }
+            else//Server stop command
+            {
+                stopFunction();
+            }
+
+            return Task.CompletedTask;
         }
 
         private static async Task BotReady()
