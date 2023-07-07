@@ -23,7 +23,7 @@ namespace McServer.DiscordManager
             startFunction = _startFunction;
             stopFunction = _stopFunction;
 
-            token = System.IO.File.ReadAllText("DiscordManager/discord.token"); //Load the discord bot token from the file
+            token = System.IO.File.ReadAllLines("DiscordManager/discord.token")[0]; //Load the discord bot token from the file
 
             MainAsyncProcess(); //Run the main process that handles running the bot
         }
@@ -65,7 +65,7 @@ namespace McServer.DiscordManager
 
         public void SendMessage(string message)
         {
-            IMessageChannel channel = (IMessageChannel)client.GetChannel(910475029542764574);
+            IMessageChannel channel = (IMessageChannel)client.GetChannel(ulong.Parse(System.IO.File.ReadAllLines("DiscordManager/discord.token")[1]));
             channel.SendMessageAsync(message);
         }
 
