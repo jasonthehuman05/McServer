@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Diagnostics;
+using System.Timers;
 
 namespace McServer
 {
@@ -23,10 +24,16 @@ namespace McServer
     {
         ServerManager.ServerManager sm;
         DiscordManager.DiscordHandler dc;
+        Timer shutdownTimer;
 
         public ServerControlPanel()
         {
             InitializeComponent();
+            shutdownTimer = new Timer();
+            shutdownTimer.Interval = 1200000;
+            shutdownTimer.Elapsed += ShutdownComputer;
+            shutdownTimer.Stop();
+
             sm = new ServerManager.ServerManager();
             sm.OnOutputReceived += ServerOutput;
             sm.ServerClosed += ServerClosed;
@@ -36,6 +43,18 @@ namespace McServer
             
             dc = new DiscordManager.DiscordHandler(sm.StartServer, sm.StopServer);
             CheckCommandLineArgs();
+        }
+
+        private void ShutdownComputer(object? sender, ElapsedEventArgs e)
+        {
+            int hours = DateTime.Now.Hour;
+            if (hours > 21 || hours < 7)
+            {
+                sm.StopServer();
+                this.Close(); //Quit Application. 
+            }
+            //If the time is not within the range, then the server will remain open for another twenty minutes,
+            //at which point, it will be queried again.
         }
 
         /// <summary>
@@ -57,6 +76,16 @@ namespace McServer
         {
             //Player list has changed
             UpdatePlayerList(sm.players.ToArray());
+            if(sm.playerCount == 0)
+            {
+                //no players online. Wait 20 minutes and close
+                shutdownTimer.Start();
+            }
+            else
+            {
+                //Players are still online. Stop the timer
+                shutdownTimer.Stop();
+            }
         }
 
         private void ServerOpened(object? sender, EventArgs e)
