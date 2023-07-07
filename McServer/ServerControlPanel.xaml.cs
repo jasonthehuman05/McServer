@@ -35,6 +35,22 @@ namespace McServer
             sm.OnPlayerLeft += PlayerChange;
             
             dc = new DiscordManager.DiscordHandler(sm.StartServer, sm.StopServer);
+            CheckCommandLineArgs();
+        }
+
+        /// <summary>
+        /// Check to see if any cli args were provided. This will allow you to autorun the server from a script, for example
+        /// </summary>
+        private void CheckCommandLineArgs()
+        {
+            string[] args = Environment.GetCommandLineArgs();
+
+            if (args.Contains("autorun"))
+            {
+                //Autorun the server
+                ConsoleOutputBox.Text = "Autostarting the server!";
+                sm.StartServer();
+            }
         }
 
         private void PlayerChange(ServerManager.OutputEventArgs e)
