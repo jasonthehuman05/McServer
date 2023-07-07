@@ -17,8 +17,8 @@ namespace McServer.DiscordManager
 
             //Stop Command
             SlashCommandBuilder stopCommandBuilder = new SlashCommandBuilder();
-            stopCommandBuilder.WithName("mcstart");
-            stopCommandBuilder.WithDescription("Start the server");
+            stopCommandBuilder.WithName("mcstop");
+            stopCommandBuilder.WithDescription("Stop the server");
 
             //Build commands and whack in an array to return them
             SlashCommandProperties[] scp = {

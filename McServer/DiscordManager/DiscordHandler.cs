@@ -23,8 +23,9 @@ namespace McServer.DiscordManager
             startFunction = _startFunction;
             stopFunction = _stopFunction;
 
-            MainAsyncProcess(); //Run the main process that handles running the bot
             token = System.IO.File.ReadAllText("DiscordManager/discord.token"); //Load the discord bot token from the file
+
+            MainAsyncProcess(); //Run the main process that handles running the bot
         }
 
         static async void MainAsyncProcess()
@@ -51,10 +52,12 @@ namespace McServer.DiscordManager
             if(arg.CommandName == "mcstart") //Server start command
             {
                 startFunction();
+                arg.RespondAsync("Starting, Please Wait.");
             }
             else//Server stop command
             {
                 stopFunction();
+                arg.RespondAsync("Stopping, Please Wait.");
             }
 
             return Task.CompletedTask;

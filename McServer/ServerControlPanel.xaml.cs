@@ -22,6 +22,7 @@ namespace McServer
     public partial class ServerControlPanel : Window
     {
         ServerManager.ServerManager sm;
+        DiscordManager.DiscordHandler dc;
 
         public ServerControlPanel()
         {
@@ -32,6 +33,8 @@ namespace McServer
             sm.ServerOpened += ServerOpened;
             sm.OnPlayerJoined += PlayerChange;
             sm.OnPlayerLeft += PlayerChange;
+            
+            dc = new DiscordManager.DiscordHandler(sm.StartServer, sm.StopServer);
         }
 
         private void PlayerChange(ServerManager.OutputEventArgs e)
