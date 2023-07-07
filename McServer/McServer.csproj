@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="discord.net" Version="3.11.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="DiscordManager\discord.token">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="ServerManager\runcommand.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
