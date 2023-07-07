@@ -63,6 +63,12 @@ namespace McServer.DiscordManager
             return Task.CompletedTask;
         }
 
+        public void SendMessage(string message)
+        {
+            IMessageChannel channel = (IMessageChannel)client.GetChannel(910475029542764574);
+            channel.SendMessageAsync(message);
+        }
+
         private static async Task BotReady()
         {
             //Load Commands

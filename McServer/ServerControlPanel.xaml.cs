@@ -66,6 +66,12 @@ namespace McServer
             {
                 ConsoleOutputBox.Text = ConsoleOutputBox.Text + "\n" + e.output;
                 ConsoleOutputBox.ScrollToEnd();
+
+                if(e.output.Contains("For help, type \"help\""))
+                {
+                    //Server has started. Send a dc message
+                    dc.SendMessage("Server is online!");
+                }
             });
         }
 
