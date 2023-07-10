@@ -48,9 +48,9 @@ namespace McServer
         private void ShutdownComputer(object? sender, ElapsedEventArgs e)
         {
             int hours = DateTime.Now.Hour;
+            sm.StopServer();
             if (hours > 21 || hours < 7)
             {
-                sm.StopServer();
                 this.Close(); //Quit Application. 
             }
             //If the time is not within the range, then the server will remain open for another twenty minutes,
